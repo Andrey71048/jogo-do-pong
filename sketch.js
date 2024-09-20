@@ -1,94 +1,64 @@
-let xBolinha = 20;
-let yBolinha = 20;
-let diametro = 20;
-let raio = diametro/2;
-let velocidadeXBolinha = 4;
-let velocidadeYBolinha = 4;
-let xRaquete = 5;
-let yRaquete = 150;
-let xRaqueteOponente = 585;
-let yRaqueteOponente = 150;
-let raqueteComprimento = 10;
-let raqueteAltura = 90;
-let colidiu = false;
-//sons do jogo
-let raquetada;
-let ponto;
-let trilha;
-function preload(){
-  trilha = loadSound("trilha.mp3");
-  raquetada = loadSound("raquetada.mp3");
-  ponto = loadSound("ponto.mp3");
-}
+let cor="black";
+/*
+Aqui temos um comentário de diversas linhas.
+O código abaixo é um resumo do que vimos neste primeiro curso do P5js
+*/
+
+//Vamos declarar uma variável global (este é um comentário de uma linha)
+let palavra;
+
+/*
+A variável global pode ser chamada em qualquer parte do código
+*/
+
+//Agora vamos chamar a função setup - função que é executada apenas uma vez e é encerrada
 function setup() {
-  trilha.loop();
-  createCanvas(600, 400);
+  createCanvas(400, 400);
+
+  //na linha 19 vamos preencher a váriável palavra que até então está vazia.
+  console.log("linha 18: " + palavra) //Veja no console que a varíavel está vazia:
+  palavra = palavraAleatoria();
+  console.log("linha 20: " + palavra)  //Veja agora qual palavra foi escolhida
+ 
+
+}
+/*
+Essa função palavraAleatoria() vai:
+1 - criar uma variável local (só existe dentro da função) chamada palavras
+2 - preencher essa variável com um array de palavras
+3 - retornar uma das palavras, de modo aleatório
+*/
+function palavraAleatoria(){
+  let palavras = ["amo o messi",];
+  return random(palavras);
+}
+//Agora temos ums função que prepara as cores
+function inicializaCores() {
+
+  background("purple");
+  fill("black");
+  textSize(50);
+  textAlign(CENTER, CENTER);
 }
 
+//Função que vai definir a quantidade de letras que vai aparecer ao mover horizontalmente o mouse
+function palavraParcial(minimo, maximo) {
+  let quantidade = map(mouseX, minimo, maximo, 1, palavra.length);
+  let parcial = palavra.substring(0, quantidade);
+  return parcial;
+}
+
+//Finalmente, a função draw que é um looping infinito
 function draw() {
-  background("hsla(0,0%,0%,0.57)");
-  mostraBolinha();
-  movimentaBolinha();
-  verificaColisaoBorda();
-  mostraRaquete();
-  mostraRaqueteOponente();
-  movimentaRaquete();
-  movimentaRaqueteOponente();
-  verificaColisaoRaquete(xRaquete,yRaquete);
-  verificaColisaoRaquete(xRaqueteOponente,yRaqueteOponente);
- 
-}
 
-function mostraBolinha(){
-  circle(xBolinha,yBolinha,diametro);
+  inicializaCores();
+  //criar o objeto texto
+  text(palavraParcial(0, width), 200, 200);
  
-}function movimentaBolinha(){
- 
-  xBolinha = xBolinha + velocidadeXBolinha;
- 
-   yBolinha = yBolinha + velocidadeYBolinha;
- 
-}trilha
-function verificaColisaoBorda(){
-    if(yBolinha + raio > height || yBolinha - raio<0){
-    velocidadeYBolinha *=-1
-  }
-  if(xBolinha + raio > width || xBolinha - raio<0){
-    velocidadeXBolinha *=-1
-    ponto.play();
-  }
-}
-function mostraRaquete(){
-  rect(xRaquete,yRaquete,raqueteComprimento,raqueteAltura);
-}
-function mostraRaqueteOponente(){
-  rect(xRaqueteOponente,yRaqueteOponente,raqueteComprimento,raqueteAltura);
-}
+  //Agora, vamos mudar a palavra que está na variável global toda vez que apertarmos a tecla de espaço
+    if (keyIsDown(32))
+    {
+    palavra = palavraAleatoria();
+    }
 
-function movimentaRaquete(){
-  if(keyIsDown(87)){//87 é W
-    yRaquete -=5;
-  }
-  if(keyIsDown(83)){//83 é S
-    yRaquete +=5;
-  }  
-}
-function movimentaRaqueteOponente(){
-  if(keyIsDown(UP_ARROW)){//87 é W
-    yRaqueteOponente -=5;
-  }
-  if(keyIsDown(DOWN_ARROW)){//83 é S
-    yRaqueteOponente +=5;
-  }  
-}
-function verificaColisaoRaquete(x,y){
-  colidiu = collideRectCircle(x,y,raqueteComprimento,raqueteAltura,xBolinha,yBolinha,raio);
-  if(colidiu){
-    raquetada.play();
-    velocidadeXBolinha *=-1;
-    if(xBolinha < 50)
-       xBolinha = 23;
-    else
-        xBolinha = 577;
-  }
 }
